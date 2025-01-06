@@ -9,8 +9,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #f1f5f9;
+    --foreground: #f1f5f9;
   }
 }
 
@@ -18,4 +18,53 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Small Screen */
+@media (min-width: 0px) and (max-width: 743px) {
+  .smallScreen {
+    display: block;
+    width: 375px;
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .mediumScreen {
+    display: none;
+  }
+  .largeScreen {
+    display: none;
+  }
+}
+
+/* Medium Screen */
+@media (min-width: 744px) and (max-width: 1199px) {
+  .smallScreen {
+    display: none;
+  }
+  .mediumScreen {
+    display: block;
+    width: 744px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .largeScreen {
+    display: none;
+  }
+}
+
+/* Large Screen */
+@media (min-width: 1200px) {
+  .smallScreen {
+    display: none;
+  }
+  .mediumScreen {
+    display: none;
+  }
+  .largeScreen {
+    display: block;
+    width: 1200px;
+    margin: 0 auto;
+  }
 }

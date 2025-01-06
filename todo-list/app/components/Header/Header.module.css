@@ -11,6 +11,8 @@
   .smallScreen {
     display: block;
     width: 375px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .mediumScreen {
     display: none;
@@ -28,6 +30,8 @@
   .mediumScreen {
     display: block;
     width: 744px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
   .largeScreen {
     display: none;
@@ -45,5 +49,7 @@
   .largeScreen {
     display: block;
     width: 1200px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
