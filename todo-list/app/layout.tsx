@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import localFont from 'next/font/local';
+import Header from './components/Header/Header';
 
 const nanumSquareBold = localFont({
   src: '../public/fonts/NanumSquare-Bold.ttf',
@@ -24,7 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${nanumSquareBold.variable} ${nanumSquareRegular.variable} antialiased`}>{children}</body>
+      <body className={`${nanumSquareBold.variable} ${nanumSquareRegular.variable} antialiased`}>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
