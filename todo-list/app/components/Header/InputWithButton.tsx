@@ -31,8 +31,8 @@ export default function InputWithButton({ inputSrc, inputWidth, buttonSrc, butto
   };
 
   return (
-    <div className='flex mt-6 relative'>
-      <Image src={inputSrc} alt='search field' width={inputWidth} height={30} className='mr-4' />
+    <div className='flex mt-6 relative justify-between'>
+      <Image src={inputSrc} alt='search field' width={inputWidth} height={56} className='mr-4' />
       {/* 입력 필드 */}
       <div className='absolute left-6 top-3.5'>
         <input
@@ -46,7 +46,7 @@ export default function InputWithButton({ inputSrc, inputWidth, buttonSrc, butto
       </div>
       {/* 등록 버튼 */}
       <div onClick={handleButtonClick} className='cursor-pointer'>
-        <Image src={buttonSrc} alt='Add Button' width={buttonWidth} height={50} />
+        <Image src={buttonSrc} alt='Add Button' width={buttonWidth} height={56} />
       </div>
     </div>
   );
