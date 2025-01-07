@@ -28,7 +28,7 @@ export default function TodoList({
           {todoList.map((item, index) => (
             <li key={index} className='mb-4'>
               <div className='relative' style={{ width: `${boxWidth}px`, height: `${boxHeight}px` }}>
-                <Link href={`/items/${index}`}>
+                <Link href={`/items/${item.id}`}>
                   <Image
                     src={`/check-list/${screenSize}_default_rectangle.svg`}
                     alt='rectangle'
@@ -38,7 +38,7 @@ export default function TodoList({
                 </Link>
                 <div
                   className='absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer'
-                  onClick={() => onMarkAsDone(index)}
+                  onClick={() => onMarkAsDone(item.id)}
                 >
                   <Image src={'/check-list/default_box.svg'} alt='check-box' width={32} height={32} />
                 </div>
