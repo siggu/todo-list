@@ -17,3 +17,17 @@ export const getItems = () =>
       },
     })
     .then((response) => response.data);
+
+// todo POST
+export const postTodo = (name: string) =>
+  instance
+    .post(
+      '/items',
+      { name }, // POST body에 name만 전달
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    .then((response) => response.data);

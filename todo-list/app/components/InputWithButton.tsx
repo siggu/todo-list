@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import { ChangeEvent, useState } from 'react';
 import { IInputWithButton } from '../type';
+import { useMutation } from '@tanstack/react-query';
+import { postTodo } from '../api';
 
 export default function InputWithButton({
   inputSrc,
@@ -11,6 +13,16 @@ export default function InputWithButton({
   onAddTodo,
 }: IInputWithButton) {
   const [inputValue, setInputValue] = useState('');
+  const mutation = useMutation({
+    mutationFn: (name: string) => postTodo(name),
+    onSuccess: (newTodo) => {
+      onAddTodo(newTodo); // 성공적으로 새 Todo를 추가하면 부모 컴포넌트로 전달
+      setInputValue(''); // 입력 필드 초기화
+    },
+    onError: (error) => {
+      console.error('Todo 추가 실패:', error); // 오류 처리
+    },
+  });
 
   // 입력 감지
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -19,8 +31,7 @@ export default function InputWithButton({
 
   const handleButtonClick = () => {
     if (!inputValue.trim()) return; // 빈 입력 방지
-    onAddTodo(inputValue);
-    setInputValue(''); // 입력 필드 초기화
+    mutation.mutate(inputValue);
   };
 
   const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
