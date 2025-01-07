@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { IItemData } from '../type';
+import Link from 'next/link';
 
 interface DoneListProps {
   doneList: IItemData[];
@@ -36,15 +37,17 @@ export default function DoneList({
         </div>
       ) : (
         <ul className='mt-4'>
-          {doneList.map((task, index) => (
+          {doneList.map((item, index) => (
             <li key={index} className='mb-4'>
               <div className='relative' style={{ width: `${boxWidth}px`, height: `${boxHeight}px` }}>
-                <Image
-                  src={`/check-list/${screenSize}_active_rectangle.svg`}
-                  alt='rectangle'
-                  layout='fill'
-                  objectFit='cover'
-                />
+                <Link href={`/items/${item.id}`}>
+                  <Image
+                    src={`/check-list/${screenSize}_active_rectangle.svg`}
+                    alt='rectangle'
+                    layout='fill'
+                    objectFit='cover'
+                  />
+                </Link>
                 <div
                   className='absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer'
                   onClick={() => onMarkAsTodo(index)}
@@ -52,7 +55,7 @@ export default function DoneList({
                   <Image src={'/check-list/active_box.svg'} alt='check-box' width={32} height={32} />
                 </div>
                 <span className='absolute top-1/2 left-16 transform -translate-y-1/2 text-black line-through font-nanumSquareBold'>
-                  {task.name}
+                  {item.name}
                 </span>
               </div>
             </li>
