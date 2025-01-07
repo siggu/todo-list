@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InputWithButton from './components/InputWithButton';
 import TodoList from './components/TodoList';
 import DoneList from './components/DoneList';
@@ -9,6 +9,28 @@ import Image from 'next/image';
 export default function Home() {
   const [todoList, setTodoList] = useState<string[]>([]);
   const [doneList, setDoneList] = useState<string[]>([]);
+
+  // 로컬 스토리지 키
+  const TODO_LIST_KEY = 'todoList';
+  const DONE_LIST_KEY = 'doneList';
+
+  // 컴포넌트가 처음 로드될 때 로컬 스토리지에서 데이터 가져오기
+  useEffect(() => {
+    const storedTodos = localStorage.getItem(TODO_LIST_KEY);
+    const storedDones = localStorage.getItem(DONE_LIST_KEY);
+
+    if (storedTodos) setTodoList(JSON.parse(storedTodos));
+    if (storedDones) setDoneList(JSON.parse(storedDones));
+  }, []);
+
+  // todoList나 doneList가 변경될 때 로컬 스토리지에 저장
+  useEffect(() => {
+    localStorage.setItem(TODO_LIST_KEY, JSON.stringify(todoList));
+  }, [todoList]);
+
+  useEffect(() => {
+    localStorage.setItem(DONE_LIST_KEY, JSON.stringify(doneList));
+  }, [doneList]);
 
   // 새로운 todo 추가 함수
   const handleAddTodo = (newTodo: string) => {
