@@ -31,3 +31,17 @@ export const postTodo = (name: string) =>
       }
     )
     .then((response) => response.data);
+
+// item PATCH
+export const patchItem = (isCompleted: boolean, itemId: number) =>
+  instance
+    .patch(
+      `/items/${itemId}`,
+      { isCompleted }, // PATCH body에 isCompleted만 전달
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    .then((response) => response.data);

@@ -5,8 +5,8 @@ import InputWithButton from './components/InputWithButton';
 import TodoList from './components/TodoList';
 import DoneList from './components/DoneList';
 import Image from 'next/image';
-import { useQuery } from '@tanstack/react-query';
-import { getItems } from './api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getItems, patchItem } from './api';
 import { IItemData } from './type';
 
 export default function Home() {
@@ -18,8 +18,6 @@ export default function Home() {
     queryFn: getItems,
   });
 
-  console.log(data);
-
   useEffect(() => {
     if (data) {
       const todos = data.filter((item: { isCompleted: boolean }) => !item.isCompleted); // isCompleted가 false인 항목을 todoList에 추가
@@ -30,6 +28,26 @@ export default function Home() {
     }
   }, [data]);
 
+  // todo <-> done 변경 mutation
+  const mutation = useMutation({
+    mutationFn: (itemId: number) => {
+      // id를 기준으로 item 찾기
+      const item = todoList.find((item) => item.id === itemId) || doneList.find((item) => item.id === itemId);
+      if (item) {
+        return patchItem(!item.isCompleted, itemId);
+      }
+    },
+    onSuccess: (updatedItem: IItemData) => {
+      // mutation 성공 시 최신 상태를 기반으로 list 업데이트
+      setTodoList((prevList) =>
+        updatedItem.isCompleted ? prevList.filter((item) => item.id !== updatedItem.id) : [...prevList, updatedItem]
+      );
+      setDoneList((prevList) =>
+        updatedItem.isCompleted ? [...prevList, updatedItem] : prevList.filter((item) => item.id !== updatedItem.id)
+      );
+    },
+  });
+
   // 새로운 todo 추가 함수
   const handleAddTodo = (newTodo: string) => {
     setTodoList((prevList) => [...prevList, newTodo]);
@@ -38,15 +56,13 @@ export default function Home() {
   // 완료 버튼 클릭 시 처리
   const handleMarkAsDone = (index: number) => {
     const item = todoList[index];
-    setTodoList((prevList) => prevList.filter((_, i) => i !== index));
-    setDoneList((prevList) => [...prevList, item]);
+    mutation.mutate(item.id);
   };
 
   // todo 전환 함수
   const handleMarkAsTodo = (index: number) => {
     const item = doneList[index];
-    setDoneList((prevList) => prevList.filter((_, i) => i !== index));
-    setTodoList((prevList) => [...prevList, item]);
+    mutation.mutate(item.id);
   };
 
   const addSmallButtonSrc =
