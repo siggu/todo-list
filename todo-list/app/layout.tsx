@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import localFont from 'next/font/local';
 import Header from './components/Header/Header';
+import ReactQueryProviders from './hooks/useReactQuery';
 
 const nanumSquareBold = localFont({
   src: '../public/fonts/NanumSquare-Bold.ttf',
@@ -27,7 +28,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`${nanumSquareBold.variable} ${nanumSquareRegular.variable} antialiased`}>
         <Header />
-        {children}
+        <ReactQueryProviders>{children}</ReactQueryProviders>
       </body>
     </html>
   );
