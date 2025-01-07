@@ -5,32 +5,30 @@ import InputWithButton from './components/InputWithButton';
 import TodoList from './components/TodoList';
 import DoneList from './components/DoneList';
 import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
+import { getItems } from './api';
+import { IItemData } from './type';
 
 export default function Home() {
-  const [todoList, setTodoList] = useState<string[]>([]);
-  const [doneList, setDoneList] = useState<string[]>([]);
+  const [todoList, setTodoList] = useState<IItemData[]>([]);
+  const [doneList, setDoneList] = useState<IItemData[]>([]);
 
-  // 로컬 스토리지 키
-  const TODO_LIST_KEY = 'todoList';
-  const DONE_LIST_KEY = 'doneList';
+  const { data, isLoading } = useQuery<IItemData[]>({
+    queryKey: ['items'],
+    queryFn: getItems,
+  });
 
-  // 컴포넌트가 처음 로드될 때 로컬 스토리지에서 데이터 가져오기
-  useEffect(() => {
-    const storedTodos = localStorage.getItem(TODO_LIST_KEY);
-    const storedDones = localStorage.getItem(DONE_LIST_KEY);
-
-    if (storedTodos) setTodoList(JSON.parse(storedTodos));
-    if (storedDones) setDoneList(JSON.parse(storedDones));
-  }, []);
-
-  // todoList나 doneList가 변경될 때 로컬 스토리지에 저장
-  useEffect(() => {
-    localStorage.setItem(TODO_LIST_KEY, JSON.stringify(todoList));
-  }, [todoList]);
+  console.log(data);
 
   useEffect(() => {
-    localStorage.setItem(DONE_LIST_KEY, JSON.stringify(doneList));
-  }, [doneList]);
+    if (data) {
+      const todos = data.filter((item: { isCompleted: boolean }) => !item.isCompleted); // isCompleted가 false인 항목을 todoList에 추가
+      const dones = data.filter((item: { isCompleted: boolean }) => item.isCompleted); // isCompleted가 true인 항목을 doneList에 추가
+
+      setTodoList(todos);
+      setDoneList(dones);
+    }
+  }, [data]);
 
   // 새로운 todo 추가 함수
   const handleAddTodo = (newTodo: string) => {

@@ -1,16 +1,6 @@
 import Image from 'next/image';
-
-interface TodoListProps {
-  todoList: string[];
-  onMarkAsDone: (index: number) => void;
-  emptyImageSrc: string;
-  emptyImageAlt: string;
-  emptyImageWidth: number;
-  emptyImageHeight: number;
-  screenSize: string;
-  boxWidth: number;
-  boxHeight: number;
-}
+import Link from 'next/link';
+import { TodoListProps } from '../type';
 
 export default function TodoList({
   todoList,
@@ -35,15 +25,17 @@ export default function TodoList({
         </div>
       ) : (
         <ul className='mt-4'>
-          {todoList.map((task, index) => (
+          {todoList.map((item, index) => (
             <li key={index} className='mb-4'>
               <div className='relative' style={{ width: `${boxWidth}px`, height: `${boxHeight}px` }}>
-                <Image
-                  src={`/check-list/${screenSize}_default_rectangle.svg`}
-                  alt='rectangle'
-                  layout='fill'
-                  objectFit='cover'
-                />
+                <Link href={`/items/${index}`}>
+                  <Image
+                    src={`/check-list/${screenSize}_default_rectangle.svg`}
+                    alt='rectangle'
+                    layout='fill'
+                    objectFit='cover'
+                  />
+                </Link>
                 <div
                   className='absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer'
                   onClick={() => onMarkAsDone(index)}
@@ -51,7 +43,7 @@ export default function TodoList({
                   <Image src={'/check-list/default_box.svg'} alt='check-box' width={32} height={32} />
                 </div>
                 <span className='absolute top-1/2 left-16 transform -translate-y-1/2 text-black font-nanumSquareBold'>
-                  {task}
+                  {item.name}
                 </span>
               </div>
             </li>

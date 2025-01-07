@@ -1,7 +1,8 @@
 import Image from 'next/image';
+import { IItemData } from '../type';
 
 interface DoneListProps {
-  doneList: string[];
+  doneList: IItemData[];
   onMarkAsTodo: (index: number) => void;
   emptyImageSrc: string;
   emptyImageAlt: string;
@@ -51,7 +52,7 @@ export default function DoneList({
                   <Image src={'/check-list/active_box.svg'} alt='check-box' width={32} height={32} />
                 </div>
                 <span className='absolute top-1/2 left-16 transform -translate-y-1/2 text-black line-through font-nanumSquareBold'>
-                  {task}
+                  {task.name}
                 </span>
               </div>
             </li>
