@@ -7,10 +7,17 @@ interface IInputWithButton {
   buttonSrc: string;
   buttonWidth: number;
   prValue: string;
+  onAddTodo: (todo: string) => void;
 }
 
-export default function InputWithButton({ inputSrc, inputWidth, buttonSrc, buttonWidth, prValue }: IInputWithButton) {
-  const [todoList, setTodoList] = useState([]);
+export default function InputWithButton({
+  inputSrc,
+  inputWidth,
+  buttonSrc,
+  buttonWidth,
+  prValue,
+  onAddTodo,
+}: IInputWithButton) {
   const [inputValue, setInputValue] = useState('');
 
   // 입력 감지
@@ -20,11 +27,11 @@ export default function InputWithButton({ inputSrc, inputWidth, buttonSrc, butto
 
   const handleButtonClick = () => {
     if (!inputValue.trim()) return; // 빈 입력 방지
-    setTodoList((prevList) => [...prevList, inputValue]);
+    onAddTodo(inputValue);
     setInputValue(''); // 입력 필드 초기화
   };
 
-  const handlePressEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleButtonClick(); // "엔터" 키 입력 시 버튼 클릭 이벤트 호출
     }
