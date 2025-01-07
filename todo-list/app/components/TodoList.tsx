@@ -38,7 +38,7 @@ export default function TodoList({
                 </Link>
                 <div
                   className='absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer'
-                  onClick={() => onMarkAsDone(item.id)}
+                  onClick={() => onMarkAsDone(index)}
                 >
                   <Image src={'/check-list/default_box.svg'} alt='check-box' width={32} height={32} />
                 </div>
