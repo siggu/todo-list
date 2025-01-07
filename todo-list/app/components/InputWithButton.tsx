@@ -1,14 +1,6 @@
 import Image from 'next/image';
 import { ChangeEvent, useState } from 'react';
-
-interface IInputWithButton {
-  inputSrc: string;
-  inputWidth: number;
-  buttonSrc: string;
-  buttonWidth: number;
-  prValue: string;
-  onAddTodo: (todo: string) => void;
-}
+import { IInputWithButton } from '../type';
 
 export default function InputWithButton({
   inputSrc,
