@@ -7,6 +7,9 @@ interface TodoListProps {
   emptyImageAlt: string;
   emptyImageWidth: number;
   emptyImageHeight: number;
+  screenSize: string;
+  boxWidth: number;
+  boxHeight: number;
 }
 
 export default function TodoList({
@@ -16,6 +19,9 @@ export default function TodoList({
   emptyImageAlt,
   emptyImageWidth,
   emptyImageHeight,
+  screenSize,
+  boxWidth,
+  boxHeight,
 }: TodoListProps) {
   return (
     <div>
@@ -28,13 +34,26 @@ export default function TodoList({
           </div>
         </div>
       ) : (
-        <ul>
+        <ul className='mt-4'>
           {todoList.map((task, index) => (
-            <li key={index}>
-              <span className='text-black'>{task}</span>
-              <button onClick={() => onMarkAsDone(index)} className='ml-4 text-blue-500 underline'>
-                완료
-              </button>
+            <li key={index} className='mb-4'>
+              <div className='relative' style={{ width: `${boxWidth}px`, height: `${boxHeight}px` }}>
+                <Image
+                  src={`/check-list/${screenSize}_default_rectangle.svg`}
+                  alt='rectangle'
+                  layout='fill'
+                  objectFit='cover'
+                />
+                <div
+                  className='absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer'
+                  onClick={() => onMarkAsDone(index)}
+                >
+                  <Image src={'/check-list/default_box.svg'} alt='check-box' width={32} height={32} />
+                </div>
+                <span className='absolute top-1/2 left-16 transform -translate-y-1/2 text-black font-nanumSquareBold'>
+                  {task}
+                </span>
+              </div>
             </li>
           ))}
         </ul>

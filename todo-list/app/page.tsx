@@ -22,6 +22,13 @@ export default function Home() {
     setDoneList((prevList) => [...prevList, item]);
   };
 
+  // todo 전환 함수
+  const handleMarkAsTodo = (index: number) => {
+    const item = doneList[index];
+    setDoneList((prevList) => prevList.filter((_, i) => i !== index));
+    setTodoList((prevList) => [...prevList, item]);
+  };
+
   const addSmallButtonSrc =
     todoList.length === 0
       ? '/btn/add_small_active.svg' // Todo가 없을 때 이미지
@@ -52,6 +59,9 @@ export default function Home() {
             emptyImageAlt='No tasks'
             emptyImageWidth={120}
             emptyImageHeight={120}
+            screenSize='small'
+            boxWidth={344}
+            boxHeight={50}
           />
         </div>
         <div className='mt-12'>
@@ -59,10 +69,14 @@ export default function Home() {
         </div>
         <DoneList
           doneList={doneList}
+          onMarkAsTodo={handleMarkAsTodo}
           emptyImageSrc='/svgs/img/empty/done_small.svg'
           emptyImageAlt='No completed tasks'
           emptyImageWidth={120}
           emptyImageHeight={120}
+          screenSize='small'
+          boxWidth={344}
+          boxHeight={50}
         />
       </div>
       {/* Medium Screen */}
@@ -86,6 +100,9 @@ export default function Home() {
             emptyImageAlt='No tasks'
             emptyImageWidth={240}
             emptyImageHeight={240}
+            screenSize='medium'
+            boxWidth={696}
+            boxHeight={50}
           />
         </div>
         <div className='mt-12'>
@@ -93,10 +110,14 @@ export default function Home() {
         </div>
         <DoneList
           doneList={doneList}
+          onMarkAsTodo={handleMarkAsTodo}
           emptyImageSrc='/svgs/img/empty/done_small.svg'
           emptyImageAlt='No completed tasks'
           emptyImageWidth={240}
           emptyImageHeight={240}
+          screenSize='medium'
+          boxWidth={696}
+          boxHeight={50}
         />
       </div>
       {/* Large Screen */}
@@ -109,12 +130,11 @@ export default function Home() {
           prValue='pr-[780px]'
           onAddTodo={handleAddTodo}
         />
-        <div className='flex justify-between'>
-          <div>
-            <div className='mt-10'>
-              <Image src={'/svgs/img/todo.svg'} alt='todo' width={100} height={36} />
-            </div>
-            <div className='py-20 px-40'>
+        <div className='flex justify-between mt-10'>
+          {/* Todo Section */}
+          <div className='flex flex-col items-start'>
+            <Image src={'/svgs/img/todo.svg'} alt='todo' width={100} height={36} />
+            <div className='mt-6 w-[588px]'>
               <TodoList
                 todoList={todoList}
                 onMarkAsDone={handleMarkAsDone}
@@ -122,20 +142,27 @@ export default function Home() {
                 emptyImageAlt='No tasks'
                 emptyImageWidth={240}
                 emptyImageHeight={240}
+                screenSize='large'
+                boxWidth={588}
+                boxHeight={50}
               />
             </div>
           </div>
-          <div>
-            <div className='mt-10'>
-              <Image src={'/svgs/img/done.svg'} alt='done' width={100} height={36} />
-            </div>
-            <div className='py-20 px-40'>
+
+          {/* Done Section */}
+          <div className='flex flex-col items-start'>
+            <Image src={'/svgs/img/done.svg'} alt='done' width={100} height={36} />
+            <div className='mt-6 w-[588px]'>
               <DoneList
                 doneList={doneList}
+                onMarkAsTodo={handleMarkAsTodo}
                 emptyImageSrc='/svgs/img/empty/done_small.svg'
                 emptyImageAlt='No completed tasks'
                 emptyImageWidth={240}
                 emptyImageHeight={240}
+                screenSize='large'
+                boxWidth={588}
+                boxHeight={50}
               />
             </div>
           </div>
