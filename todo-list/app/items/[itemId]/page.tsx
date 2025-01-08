@@ -1,14 +1,15 @@
 'use client';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { getItem, patchItem, postImage } from '@/app/api';
 import Image from 'next/image';
 import { IItemDetail } from '@/app/type';
-import { SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Page() {
   const { itemId } = useParams();
+  const router = useRouter();
 
   const { data, isLoading } = useQuery<IItemDetail>({
     queryKey: [itemId],
@@ -21,6 +22,47 @@ export default function Page() {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [isActive, setIsActive] = useState<boolean>(false);
+
+  // 이미지 post mutation
+  const { mutate: imageUpload } = useMutation({
+    mutationFn: (formData: FormData) => postImage(formData),
+    onSuccess: (response: { url: string }) => {
+      const uploadedImageUrl = response?.url;
+      if (uploadedImageUrl) {
+        setImageUrl(uploadedImageUrl); // 성공적으로 받은 imageUrl 업데이트
+      } else {
+        console.error('URL을 받을 수 없습니다.');
+      }
+    },
+    onError: (error) => {
+      console.error('이미지 업로드 실패:', error);
+    },
+  });
+
+  // 아이템 patch mutation
+  const { mutate: updateItem } = useMutation({
+    mutationFn: ({
+      name,
+      memo,
+      imageUrl,
+      isCompleted,
+      itemId,
+    }: {
+      name: string;
+      memo: string;
+      imageUrl: string;
+      isCompleted: boolean;
+      itemId: number;
+    }) => patchItem(name, memo, imageUrl, isCompleted, itemId),
+    onSuccess: (data) => {
+      console.log('아이템 업데이트 성공:', data);
+      router.push('/');
+    },
+    onError: (error) => {
+      console.error('아이템 업데이트 실패:', error);
+      console.log(todo, memo, imageUrl, isCompleted, itemId);
+    },
+  });
 
   useEffect(() => {
     if (data) {
@@ -40,6 +82,7 @@ export default function Page() {
     }
   }, [todo, memo, isCompleted, imageUrl]);
 
+  // 핸들러
   const handleTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodo(e.target.value);
   };
@@ -50,6 +93,44 @@ export default function Page() {
 
   const handleIsCompleted = () => {
     setIsCompleted((prev) => !prev);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      // 파일 이름 체크
+      const fileName = file.name;
+      const fileNameRegex = /^[a-zA-Z-_\.]+$/;
+      if (!fileNameRegex.test(fileName)) {
+        alert('파일 이름은 영어로만 구성되어야 합니다.');
+        return;
+      }
+
+      // 파일 크기 체크
+      const fileSizeInMB = file.size / (1024 * 1024);
+      if (fileSizeInMB > 5) {
+        alert('파일 크기는 5MB 이하여야 합니다.');
+        return;
+      }
+
+      // FormData 생성
+      const formData = new FormData();
+      formData.append('image', file); // 'image'는 API 스펙에 맞춰야 함
+
+      setImage(file); // 선택한 이미지 상태 업데이트
+      imageUpload(formData); // Mutation 호출
+    }
+  };
+
+  const handleAllChange = () => {
+    updateItem({
+      name: todo,
+      memo: memo,
+      imageUrl: imageUrl,
+      isCompleted: isCompleted,
+      itemId: Number(itemId),
+    });
   };
 
   return (
@@ -93,7 +174,7 @@ export default function Page() {
               {/* 사진 추가 */}
               <div className='relative'>
                 <Image
-                  src={data?.imageUrl ? data?.imageUrl : '/btn/add_large_image.svg'}
+                  src={image ? URL.createObjectURL(image) : data?.imageUrl || '/btn/add_large_image.svg'}
                   alt='large rectangle'
                   width={384}
                   height={311}
@@ -105,7 +186,13 @@ export default function Page() {
                 >
                   <Image src={image ? '/btn/edit.svg' : '/btn/plus.svg'} width={64} height={64} alt='image-upload' />
                 </label>
-                <input type='file' id='image-upload' accept='image/*' style={{ display: 'none' }} />
+                <input
+                  type='file'
+                  id='image-upload'
+                  accept='image/*'
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                />
               </div>
               <div>
                 <div className='relative'>
@@ -116,7 +203,7 @@ export default function Page() {
                   </div>
                   <div className='absolute inset-4 mt-[58px] flex flex-col overflow-auto' style={{ resize: 'none' }}>
                     <textarea
-                      value={memo}
+                      value={memo || ''}
                       onChange={handleMemoChange}
                       className='w-full h-full text-black focus:outline-none resize-none text-center mb-6 custom-scroll font-nanumSquareBold'
                       style={{ background: 'none' }}
@@ -132,6 +219,7 @@ export default function Page() {
                   width={168}
                   height={56}
                   alt='edit'
+                  onClick={isActive ? handleAllChange : undefined}
                   className={isActive ? 'cursor-pointer' : ''}
                 />
               </div>

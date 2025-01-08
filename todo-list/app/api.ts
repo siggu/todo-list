@@ -68,5 +68,11 @@ export const patchItem = (name: string, memo: string, imageUrl: string, isComple
     .then((response) => response.data);
 
 // image POST
-export const postImage = (image: ImageData) =>
-  instance.post('/images/upload', { image }).then((response) => response.data);
+export const postImage = (formData: FormData) =>
+  instance
+    .post('/images/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((response) => response.data);
