@@ -6,7 +6,7 @@ import TodoList from './components/TodoList';
 import DoneList from './components/DoneList';
 import Image from 'next/image';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getItems, patchItem } from './api';
+import { getItems, patchItemIsCompleted } from './api';
 import { IItemData } from './type';
 
 export default function Home() {
@@ -34,7 +34,7 @@ export default function Home() {
       // id를 기준으로 item 찾기
       const item = todoList.find((item) => item.id === itemId) || doneList.find((item) => item.id === itemId);
       if (item) {
-        return patchItem(!item.isCompleted, itemId);
+        return patchItemIsCompleted(!item.isCompleted, itemId);
       }
     },
     onSuccess: (updatedItem: IItemData) => {
