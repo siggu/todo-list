@@ -76,3 +76,6 @@ export const postImage = (formData: FormData) =>
       },
     })
     .then((response) => response.data);
+
+// item DELETE
+export const deleteItem = (itemId: number) => instance.delete(`/items/${itemId}`).then((response) => response.data);

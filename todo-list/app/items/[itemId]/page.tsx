@@ -6,6 +6,7 @@ import { getItem, patchItem, postImage } from '@/app/api';
 import Image from 'next/image';
 import { IItemDetail } from '@/app/type';
 import { useEffect, useState } from 'react';
+import { deleteItem } from './../../api';
 
 export default function Page() {
   const { itemId } = useParams();
@@ -61,6 +62,14 @@ export default function Page() {
     onError: (error) => {
       console.error('아이템 업데이트 실패:', error);
       console.log(todo, memo, imageUrl, isCompleted, itemId);
+    },
+  });
+
+  // 아이템 delete mutation
+  const { mutate: itemDelete } = useMutation({
+    mutationFn: (itemId: number) => deleteItem(itemId),
+    onSuccess: () => {
+      router.push('/');
     },
   });
 
@@ -131,6 +140,10 @@ export default function Page() {
       isCompleted: isCompleted,
       itemId: Number(itemId),
     });
+  };
+
+  const handleDeleteItem = () => {
+    itemDelete(itemId);
   };
 
   return (
@@ -224,7 +237,13 @@ export default function Page() {
                 />
               </div>
               <div>
-                <Image src={'/btn/delete_large_default.svg'} width={168} height={56} alt='delete' />
+                <Image
+                  src={'/btn/delete_large_default.svg'}
+                  width={168}
+                  height={56}
+                  onClick={handleDeleteItem}
+                  alt='delete'
+                />
               </div>
             </div>
           </div>
