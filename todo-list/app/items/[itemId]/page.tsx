@@ -3,7 +3,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { getItem, patchItem, postImage } from '@/app/api';
-import Image from 'next/image';
 import { IItemDetail } from '@/app/type';
 import { useEffect, useState } from 'react';
 import { deleteItem } from './../../api';
@@ -16,7 +15,7 @@ export default function Page() {
   const { itemId } = useParams();
   const router = useRouter();
 
-  const { data, isLoading } = useQuery<IItemDetail>({
+  const { data } = useQuery<IItemDetail>({
     queryKey: [itemId],
     queryFn: getItem,
   });

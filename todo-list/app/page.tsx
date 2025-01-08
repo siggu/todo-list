@@ -13,7 +13,7 @@ export default function Home() {
   const [todoList, setTodoList] = useState<IItemData[]>([]);
   const [doneList, setDoneList] = useState<IItemData[]>([]);
 
-  const { data, isLoading } = useQuery<IItemData[]>({
+  const { data } = useQuery<IItemData[]>({
     queryKey: ['items'],
     queryFn: getItems,
   });
