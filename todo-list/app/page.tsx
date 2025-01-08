@@ -75,7 +75,7 @@ export default function Home() {
   return (
     <header>
       {/* Small Screen */}
-      <div className='smallScreen'>
+      <div className='smallScreen px-4'>
         <InputWithButton
           inputSrc={'/svgs/img/search_small.svg'}
           inputWidth={270}
@@ -116,7 +116,7 @@ export default function Home() {
         />
       </div>
       {/* Medium Screen */}
-      <div className='mediumScreen'>
+      <div className='mediumScreen px-6'>
         <InputWithButton
           inputSrc={'/svgs/img/search_medium.svg'}
           inputWidth={518}
