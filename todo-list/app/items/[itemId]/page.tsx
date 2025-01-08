@@ -12,7 +12,8 @@ import MemoInput from '@/app/components/ItemDetail/MemoInput';
 import EditDeleteButton from '@/app/components/ItemDetail/EditButton';
 
 export default function Page() {
-  const { itemId } = useParams();
+  const { itemIdParam } = useParams<{ itemIdParam: string }>()!;
+  const itemId = Number(itemIdParam);
   const router = useRouter();
 
   const { data } = useQuery<IItemDetail>({

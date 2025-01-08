@@ -36,6 +36,7 @@ export default function Home() {
       if (item) {
         return patchItemIsCompleted(!item.isCompleted, itemId);
       }
+      return Promise.reject('item 없음');
     },
     onSuccess: (updatedItem: IItemData) => {
       // mutation 성공 시 최신 상태를 기반으로 list 업데이트
