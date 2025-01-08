@@ -24,3 +24,12 @@ export interface TodoListProps {
   boxWidth: number;
   boxHeight: number;
 }
+
+export interface IItemDetail {
+  id: number;
+  tenantId: string;
+  name: string;
+  memo: string;
+  imageUrl: string;
+  isCompleted: boolean;
+}

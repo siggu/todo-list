@@ -1,3 +1,4 @@
+import { QueryFunctionContext } from '@tanstack/react-query';
 import axios from 'axios';
 
 const tenantId = process.env.TENANT_ID; // 환경변수에서 tenantId 가져오기
@@ -18,6 +19,12 @@ export const getItems = () =>
     })
     .then((response) => response.data);
 
+// 특정 item GET
+export const getItem = ({ queryKey }: QueryFunctionContext) => {
+  const [itemId] = queryKey;
+  return instance.get(`/items/${itemId}`).then((response) => response.data);
+};
+
 // todo POST
 export const postTodo = (name: string) =>
   instance
@@ -32,8 +39,8 @@ export const postTodo = (name: string) =>
     )
     .then((response) => response.data);
 
-// item PATCH
-export const patchItem = (isCompleted: boolean, itemId: number) =>
+// item isCompleted PATCH
+export const patchItemIsCompleted = (isCompleted: boolean, itemId: number) =>
   instance
     .patch(
       `/items/${itemId}`,
@@ -45,3 +52,21 @@ export const patchItem = (isCompleted: boolean, itemId: number) =>
       }
     )
     .then((response) => response.data);
+
+// item PATCH
+export const patchItem = (name: string, memo: string, imageUrl: string, isCompleted: boolean, itemId: number) =>
+  instance
+    .patch(
+      `/items/${itemId}`,
+      { name, memo, imageUrl, isCompleted },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    .then((response) => response.data);
+
+// image POST
+export const postImage = (image: ImageData) =>
+  instance.post('/images/upload', { image }).then((response) => response.data);
