@@ -20,7 +20,7 @@ export default function ImageUpload({ screenSize, width, image, imageUrl, onImag
       />
       <label
         htmlFor='image-upload'
-        className='cursor-pointer absolute right-[-10] bottom-[-10] transform -translate-x-1/2 -translate-y-1/2'
+        className='cursor-pointer absolute right-0 bottom-0 transform -translate-x-1/2 -translate-y-1/2'
       >
         <Image src={imageUrl ? '/btn/edit.svg' : '/btn/plus.svg'} width={64} height={64} alt='image-upload' />
       </label>

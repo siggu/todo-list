@@ -5,7 +5,7 @@ import Link from 'next/link';
 const Header = () => {
   return (
     <Link href={'/'}>
-      <header className={`${styles.header}`}>
+      <header className={styles.header}>
         {/* Small Screen */}
         <div className={styles.smallScreen}>
           <Image src='/svgs/img/small.svg' alt='Small Header' width={50} height={50} />
