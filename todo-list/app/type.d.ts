@@ -10,7 +10,6 @@ export interface IInputWithButton {
   buttonSrc: string;
   buttonWidth: number;
   prValue: string;
-  onAddTodo: (todo: string) => void;
 }
 
 export interface TodoListProps {

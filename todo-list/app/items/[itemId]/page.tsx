@@ -12,8 +12,7 @@ import MemoInput from '@/app/components/ItemDetail/MemoInput';
 import EditDeleteButton from '@/app/components/ItemDetail/EditButton';
 
 export default function Page() {
-  const { itemIdParam } = useParams<{ itemIdParam: string }>()!;
-  const itemId = Number(itemIdParam);
+  const { itemId } = useParams() as { itemId: string }; // string type 명시
   const router = useRouter();
 
   const { data } = useQuery<IItemDetail>({
@@ -147,7 +146,8 @@ export default function Page() {
   };
 
   const handleDeleteItem = () => {
-    itemDelete(itemId);
+    const itemIdNumber = Number(itemId); // number type 변환
+    itemDelete(itemIdNumber);
   };
 
   return (

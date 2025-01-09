@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import InputWithButton from './components/InputWithButton';
 import TodoList from './components/TodoList';
 import DoneList from './components/DoneList';
@@ -10,68 +9,41 @@ import { getItems, patchItemIsCompleted } from './api';
 import { IItemData } from './type';
 
 export default function Home() {
-  const [todoList, setTodoList] = useState<IItemData[]>([]);
-  const [doneList, setDoneList] = useState<IItemData[]>([]);
-
   const { data } = useQuery<IItemData[]>({
     queryKey: ['items'],
     queryFn: getItems,
   });
 
-  useEffect(() => {
-    if (data) {
-      const todos = data.filter((item: { isCompleted: boolean }) => !item.isCompleted); // isCompleted가 false인 항목을 todoList에 추가
-      const dones = data.filter((item: { isCompleted: boolean }) => item.isCompleted); // isCompleted가 true인 항목을 doneList에 추가
-
-      setTodoList(todos);
-      setDoneList(dones);
-    }
-  }, [data]);
-
-  // todo <-> done 변경 mutation
   const mutation = useMutation({
     mutationFn: (itemId: number) => {
-      // id를 기준으로 item 찾기
-      const item = todoList.find((item) => item.id === itemId) || doneList.find((item) => item.id === itemId);
+      const item = data?.find((item) => item.id === itemId);
       if (item) {
         return patchItemIsCompleted(!item.isCompleted, itemId);
       }
       return Promise.reject('item 없음');
     },
-    onSuccess: (updatedItem: IItemData) => {
-      // mutation 성공 시 최신 상태를 기반으로 list 업데이트
-      setTodoList((prevList) =>
-        updatedItem.isCompleted ? prevList.filter((item) => item.id !== updatedItem.id) : [...prevList, updatedItem]
-      );
-      setDoneList((prevList) =>
-        updatedItem.isCompleted ? [...prevList, updatedItem] : prevList.filter((item) => item.id !== updatedItem.id)
-      );
-    },
   });
 
-  // 새로운 todo 추가 함수
-  const handleAddTodo = (newTodo: string) => {
-    setTodoList((prevList) => [...prevList, newTodo]);
-  };
-
   // 완료 버튼 클릭 시 처리
-  const handleMarkAsDone = (index: number) => {
-    const item = todoList[index];
-    mutation.mutate(item.id);
+  const handleMarkAsDone = (itemId: number) => {
+    mutation.mutate(itemId);
   };
 
   // todo 전환 함수
-  const handleMarkAsTodo = (index: number) => {
-    const item = doneList[index];
-    mutation.mutate(item.id);
+  const handleMarkAsTodo = (itemId: number) => {
+    mutation.mutate(itemId);
   };
 
+  // todo와 done 데이터 필터링
+  const todos = data?.filter((item) => !item.isCompleted) || [];
+  const dones = data?.filter((item) => item.isCompleted) || [];
+
   const addSmallButtonSrc =
-    todoList.length === 0
+    todos.length === 0
       ? '/btn/add_small_active.svg' // Todo가 없을 때 이미지
       : '/btn/add_small_default.svg'; // Todo가 있을 때 이미지
 
-  const addMediumLargeButtonSrc = todoList.length === 0 ? '/btn/add_large_active.svg' : '/btn/add_large_default.svg';
+  const addMediumLargeButtonSrc = todos.length === 0 ? '/btn/add_large_active.svg' : '/btn/add_large_default.svg';
 
   return (
     <header>
@@ -83,14 +55,13 @@ export default function Home() {
           buttonSrc={addSmallButtonSrc}
           buttonWidth={56}
           prValue='pr-[50px]'
-          onAddTodo={handleAddTodo}
         />
         <div className='mt-4'>
           <Image src={'/svgs/img/todo.svg'} alt='todo' width={100} height={36} />
         </div>
         <div>
           <TodoList
-            todoList={todoList}
+            todoList={todos}
             onMarkAsDone={handleMarkAsDone}
             emptyImageSrc='/svgs/img/empty/todo_small.svg'
             emptyImageAlt='No tasks'
@@ -105,7 +76,7 @@ export default function Home() {
           <Image src={'/svgs/img/done.svg'} alt='done' width={100} height={36} />
         </div>
         <DoneList
-          doneList={doneList}
+          doneList={dones}
           onMarkAsTodo={handleMarkAsTodo}
           emptyImageSrc='/svgs/img/empty/done_small.svg'
           emptyImageAlt='No completed tasks'
@@ -124,14 +95,13 @@ export default function Home() {
           buttonSrc={addMediumLargeButtonSrc}
           buttonWidth={162}
           prValue='pr-[300px]'
-          onAddTodo={handleAddTodo}
         />
         <div className='mt-10'>
           <Image src={'/svgs/img/todo.svg'} alt='todo' width={100} height={36} />
         </div>
         <div>
           <TodoList
-            todoList={todoList}
+            todoList={todos}
             onMarkAsDone={handleMarkAsDone}
             emptyImageSrc='/svgs/img/empty/todo_small.svg'
             emptyImageAlt='No tasks'
@@ -146,7 +116,7 @@ export default function Home() {
           <Image src={'/svgs/img/done.svg'} alt='done' width={100} height={36} />
         </div>
         <DoneList
-          doneList={doneList}
+          doneList={dones}
           onMarkAsTodo={handleMarkAsTodo}
           emptyImageSrc='/svgs/img/empty/done_small.svg'
           emptyImageAlt='No completed tasks'
@@ -165,7 +135,6 @@ export default function Home() {
           buttonSrc={addMediumLargeButtonSrc}
           buttonWidth={168}
           prValue='pr-[780px]'
-          onAddTodo={handleAddTodo}
         />
         <div className='flex justify-between mt-10'>
           {/* Todo Section */}
@@ -173,7 +142,7 @@ export default function Home() {
             <Image src={'/svgs/img/todo.svg'} alt='todo' width={100} height={36} />
             <div className='mt-6 w-[588px]'>
               <TodoList
-                todoList={todoList}
+                todoList={todos}
                 onMarkAsDone={handleMarkAsDone}
                 emptyImageSrc='/svgs/img/empty/todo_small.svg'
                 emptyImageAlt='No tasks'
@@ -191,7 +160,7 @@ export default function Home() {
             <Image src={'/svgs/img/done.svg'} alt='done' width={100} height={36} />
             <div className='mt-6 w-[588px]'>
               <DoneList
-                doneList={doneList}
+                doneList={dones}
                 onMarkAsTodo={handleMarkAsTodo}
                 emptyImageSrc='/svgs/img/empty/done_small.svg'
                 emptyImageAlt='No completed tasks'

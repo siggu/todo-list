@@ -4,19 +4,11 @@ import { IInputWithButton } from '../type';
 import { useMutation } from '@tanstack/react-query';
 import { postTodo } from '../api';
 
-export default function InputWithButton({
-  inputSrc,
-  inputWidth,
-  buttonSrc,
-  buttonWidth,
-  prValue,
-  onAddTodo,
-}: IInputWithButton) {
+export default function InputWithButton({ inputSrc, inputWidth, buttonSrc, buttonWidth, prValue }: IInputWithButton) {
   const [inputValue, setInputValue] = useState('');
   const mutation = useMutation({
     mutationFn: (name: string) => postTodo(name),
-    onSuccess: (newTodo) => {
-      onAddTodo(newTodo); // 성공적으로 새 Todo를 추가하면 부모 컴포넌트로 전달
+    onSuccess: () => {
       setInputValue(''); // 입력 필드 초기화
     },
     onError: (error) => {
