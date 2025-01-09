@@ -1,7 +1,9 @@
 import { QueryFunctionContext } from '@tanstack/react-query';
 import axios from 'axios';
 
-const tenantId = process.env.TENANT_ID; // 환경변수에서 tenantId 가져오기
+const tenantId = 'f8cdef31-a31e-4b4a-93e4-5f571e91255a';
+
+// const tenantId = process.env.TENANT_ID; // 환경변수에서 tenantId 가져오기
 
 // axios 인스턴스 생성
 const instance = axios.create({
